@@ -1,3 +1,7 @@
+/*
+En los estils globales se pueden seleccionar los elementos por cualquier selector de CSS
+*/
+
 html,
 body {
   padding: 0;
