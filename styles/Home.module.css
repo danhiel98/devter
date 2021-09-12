@@ -40,16 +40,19 @@
   text-decoration: none;
 }
 
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
-}
-
 .title {
   margin: 0;
-  line-height: 1.15;
-  font-size: 4rem;
+  line-height: 1;
+  font-size: 2em;
+}
+
+.subtitle {
+  color: #0060ff;
+  font-size: 1.3em;
+}
+
+.image {
+  border: 2px solid red;
 }
 
 .title,

@@ -1,6 +1,11 @@
 /*
-En los estils globales se pueden seleccionar los elementos por cualquier selector de CSS
+  En los estilos globales se pueden seleccionar los elementos por cualquier selector de CSS
 */
+
+/* Directivas de tailwind css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html,
 body {
