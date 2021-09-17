@@ -1,4 +1,14 @@
-export default function Devit({ userName, avatar, content, createdAt }) {
+import useTimeAgo from 'hooks/useTimeAgo'
+
+export default function Devit({
+  userName,
+  avatar,
+  content,
+  createdAt,
+  imageUrl
+}) {
+  const timeAgo = useTimeAgo(createdAt)
+
   return (
     <div className="lg:max-w-2xl bg-white rounded-xl shadow-md overflow-hidden lg:mx-auto m-3">
       <div className="flex">
@@ -17,9 +27,14 @@ export default function Devit({ userName, avatar, content, createdAt }) {
             >
               {userName}
             </a>
-            <span className="float-right">{createdAt}</span>
+            <span className="float-right">{timeAgo}</span>
           </div>
-          <p className="mt-2 text-gray-500">{content}</p>
+          <p className="mt-2 text-gray-500">
+            {content}
+            {imageUrl && (
+              <img className="max-h-48" src={imageUrl} alt="Imagen del devit" />
+            )}
+          </p>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import GitHub from 'components/icons/GitHub'
 import { loginWithGitHub, onAuthStateChanged } from 'firebase_config/client'
 import { useEffect } from 'react'
-import { useRouter } from 'next/dist/client/router'
+import { useRouter } from 'next/router'
 import useUser, { USER_STATES } from 'hooks/useUser'
 
 export default function Home() {

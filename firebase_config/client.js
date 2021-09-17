@@ -9,9 +9,16 @@ import {
   collection,
   addDoc,
   getDocs,
+  query,
+  orderBy,
   Timestamp
 } from 'firebase/firestore'
-import { normalizedTimestamp } from 'utils'
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL
+} from 'firebase/storage'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -27,6 +34,7 @@ const firebaseConfig = {
 initializeApp(firebaseConfig)
 const auth = getAuth()
 const db = getFirestore()
+const storage = getStorage()
 
 const mapResultFromFirebaseToUser = (user) => {
   const { email, screenName, photoUrl, localId } = user.reloadUserInfo
@@ -70,12 +78,13 @@ export const loginWithGitHub = () => {
   )
 }
 
-export const addDevit = ({ content, userId, userName, avatar }) => {
+export const addDevit = ({ content, userId, userName, avatar, imageUrl }) => {
   return addDoc(collection(db, 'devits'), {
     avatar,
     content,
     userId,
     userName,
+    imageUrl,
     createdAt: Timestamp.fromDate(new Date()),
     likesCount: 0,
     sharedCount: 0
@@ -83,16 +92,30 @@ export const addDevit = ({ content, userId, userName, avatar }) => {
 }
 
 export const fetchLastestDevits = () => {
-  return getDocs(collection(db, 'devits')).then((snapshot) => {
+  const devitsRef = collection(db, 'devits')
+  const q = query(devitsRef, orderBy('createdAt', 'desc'))
+
+  return getDocs(q).then((snapshot) => {
     return snapshot.docs.map((doc) => {
       const data = doc.data()
       const id = doc.id
+      const { createdAt } = data
 
       return {
         ...data,
         id,
-        createdAt: normalizedTimestamp(data.createdAt)
+        createdAt: createdAt.toDate()
       }
     })
   })
+}
+
+export const uploadImage = (file) => {
+  const sref = ref(storage, `images/${file.name}`)
+
+  return uploadBytesResumable(sref, file)
+}
+
+export const downloadURL = (task) => {
+  return getDownloadURL(task.snapshot.ref).then((downloadURL) => downloadURL)
 }

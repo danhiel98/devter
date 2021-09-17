@@ -5,6 +5,14 @@ export const COMPOSE_STATES = {
   ERROR: -1
 }
 
+export const DRAG_IMAGE_STATES = {
+  ERROR: -1,
+  NONE: 0,
+  DRAG_OVER: 1,
+  UPLOADING: 2,
+  COMPLETE: 3
+}
+
 export const normalizedTimestamp = (timestamp) => {
   return new Date(timestamp.seconds * 1000).toLocaleString('es-SV')
 }
