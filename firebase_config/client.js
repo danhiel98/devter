@@ -4,6 +4,14 @@
  */
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithPopup, GithubAuthProvider } from 'firebase/auth'
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  Timestamp
+} from 'firebase/firestore'
+import { normalizedTimestamp } from 'utils'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -16,15 +24,17 @@ const firebaseConfig = {
   measurementId: 'G-DKF3F7C5V9'
 }
 
-const app = initializeApp(firebaseConfig)
-const auth = getAuth(app)
+initializeApp(firebaseConfig)
+const auth = getAuth()
+const db = getFirestore()
 
 const mapResultFromFirebaseToUser = (user) => {
-  const { email, screenName, photoUrl } = user.reloadUserInfo
+  const { email, screenName, photoUrl, localId } = user.reloadUserInfo
   return {
     email,
     username: screenName,
-    avatar: photoUrl
+    avatar: photoUrl,
+    uid: localId
   }
 }
 
@@ -58,4 +68,31 @@ export const loginWithGitHub = () => {
         }
       })
   )
+}
+
+export const addDevit = ({ content, userId, userName, avatar }) => {
+  return addDoc(collection(db, 'devits'), {
+    avatar,
+    content,
+    userId,
+    userName,
+    createdAt: Timestamp.fromDate(new Date()),
+    likesCount: 0,
+    sharedCount: 0
+  })
+}
+
+export const fetchLastestDevits = () => {
+  return getDocs(collection(db, 'devits')).then((snapshot) => {
+    return snapshot.docs.map((doc) => {
+      const data = doc.data()
+      const id = doc.id
+
+      return {
+        ...data,
+        id,
+        createdAt: normalizedTimestamp(data.createdAt)
+      }
+    })
+  })
 }

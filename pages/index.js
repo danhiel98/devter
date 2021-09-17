@@ -2,14 +2,19 @@ import Head from 'next/head'
 import Image from 'next/image'
 import GitHub from 'components/icons/GitHub'
 import { loginWithGitHub, onAuthStateChanged } from 'firebase_config/client'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/dist/client/router'
+import useUser, { USER_STATES } from 'hooks/useUser'
 
 export default function Home() {
-  const [user, setUser] = useState(undefined)
+  const user = useUser()
+  const router = useRouter()
 
   useEffect(() => {
-    onAuthStateChanged(setUser)
-  }, [])
+    onAuthStateChanged((user) => {
+      user && router.replace('/home')
+    })
+  }, [user])
 
   const handleClick = () => {
     loginWithGitHub().catch((err) => {
@@ -39,7 +44,7 @@ export default function Home() {
             <br />
             with developers 👨‍💻👩‍💻
           </div>
-          {user === null && (
+          {user === USER_STATES.NOT_LOGGED && (
             <button
               onClick={handleClick}
               className="bg-black text-white mt-2 py-1 px-2 rounded-xl flex items-center mx-auto hover:bg-gray-600"
@@ -62,6 +67,13 @@ export default function Home() {
               <button className="bg-red-600 block text-white mx-auto p-1 rounded-md">
                 Log Out
               </button>
+            </div>
+          )}
+          {user === USER_STATES.NOT_KNOWN && (
+            <div className="flex items-center justify-center space-x-2 animate-bounce mt-4">
+              <div className="w-8 h-8 bg-blue-200 rounded-full"></div>
+              <div className="w-8 h-8 bg-blue-400 rounded-full"></div>
+              <div className="w-8 h-8 bg-blue-600 rounded-full"></div>
             </div>
           )}
           {/* <nav className="mt-4">

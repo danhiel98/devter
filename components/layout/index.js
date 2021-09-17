@@ -4,7 +4,7 @@ import SideBar from './sidebar'
 export default function Layout({ children }) {
   return (
     <>
-      <main className="bg-gray-100 dark:bg-gray-800 rounded-2xl relative h-screen overflow-hidden relative">
+      <main className="bg-gray-100 dark:bg-gray-800 rounded-2xl h-screen overflow-hidden relative">
         <div className="flex items-start justify-between">
           <SideBar />
           <div className="flex flex-col w-full pl-0 md:p-4 md:space-y-4">

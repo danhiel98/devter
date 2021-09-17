@@ -29,11 +29,19 @@ nav {
   text-decoration: none;
 }
 
+/* button[disabled] {
+  opacity: .5;
+  cursor: not-allowed;
+} */
+
 @layer components {
   .navbar-item {
     @apply w-full font-thin uppercase text-gray-500 dark:text-gray-200 flex items-center p-4 my-2 transition-colors duration-200 justify-start hover:text-blue-500;
   }
   .navbar-item-active {
     @apply w-full font-thin uppercase text-blue-500 flex items-center p-4 my-2 transition-colors duration-200 justify-start bg-gradient-to-r from-white to-blue-100 border-r-4 border-blue-500 dark:from-gray-700 dark:to-gray-800 border-r-4 border-blue-500;
+  }
+  .btn-black {
+    @apply bg-gray-900 text-gray-100 rounded hover:bg-gray-800 px-4 py-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed;
   }
 }

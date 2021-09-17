@@ -1,9 +1,29 @@
-import Layout from '../../components/layout'
+import Layout from 'components/layout'
+import useUser from 'hooks/useUser'
+import { fetchLastestDevits } from 'firebase_config/client'
+import { useEffect, useState } from 'react'
+import Devit from 'components/layout/devit'
 
 export default function HomePage() {
+  const user = useUser()
+  const [timeline, setTimeline] = useState([])
+
+  useEffect(() => {
+    user && fetchLastestDevits().then(setTimeline)
+  }, [user])
+
   return (
     <>
-      <h1>Hola amigos</h1>
+      {console.log(timeline)}
+      {timeline.map(({ id, userName, avatar, content, createdAt }) => (
+        <Devit
+          key={id}
+          userName={userName}
+          avatar={avatar}
+          content={content}
+          createdAt={createdAt}
+        />
+      ))}
     </>
   )
 }
