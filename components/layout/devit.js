@@ -1,17 +1,32 @@
 import useTimeAgo from 'hooks/useTimeAgo'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 export default function Devit({
   userName,
   avatar,
   content,
   createdAt,
-  imageUrl
+  imageUrl,
+  id,
+  showDetail = false
 }) {
   const timeAgo = useTimeAgo(createdAt)
+  const router = useRouter()
+
+  const handleDevitClick = (ev) => {
+    ev.preventDefault()
+    if (!showDetail) router.push(`status/${id}`)
+  }
 
   return (
-    <div className="lg:max-w-2xl bg-white rounded-xl shadow-md overflow-hidden lg:mx-auto m-3">
-      <div className="flex">
+    <article className="lg:max-w-2xl bg-white rounded-xl shadow-md overflow-hidden lg:mx-auto m-3">
+      <div
+        className={`${
+          !showDetail ? 'flex hover:bg-gray-100 cursor-pointer' : 'flex'
+        }`}
+        onClick={handleDevitClick}
+      >
         <div className="flex-shrink-0 border-black">
           <img
             className="h-16 w-16 rounded-full p-2"
@@ -27,7 +42,11 @@ export default function Devit({
             >
               {userName}
             </a>
-            <span className="float-right">{timeAgo}</span>
+            <span className="float-right">
+              <Link href={!showDetail ? `status/${id}` : '#'}>
+                <a>{timeAgo}</a>
+              </Link>
+            </span>
           </div>
           <p className="mt-2 text-gray-500">
             {content}
@@ -37,6 +56,6 @@ export default function Devit({
           </p>
         </div>
       </div>
-    </div>
+    </article>
   )
 }

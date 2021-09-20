@@ -16,3 +16,8 @@ export const DRAG_IMAGE_STATES = {
 export const normalizedTimestamp = (timestamp) => {
   return new Date(timestamp.seconds * 1000).toLocaleString('es-SV')
 }
+
+export const PATH_NAMES = {
+  HOME: '/home',
+  COMPOSE_DEVIT: '/compose/devit'
+}
