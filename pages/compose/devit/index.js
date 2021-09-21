@@ -62,7 +62,6 @@ export default function ComposeDevit() {
       imageUrl
     })
       .then((docRef) => {
-        console.log(docRef.id)
         router.push('/home')
         setStatus(COMPOSE_STATES.SUCCESS)
       })

@@ -7,8 +7,9 @@ import { getAuth, signInWithPopup, GithubAuthProvider } from 'firebase/auth'
 import {
   getFirestore,
   collection,
+  onSnapshot,
   addDoc,
-  getDocs,
+  limit,
   query,
   orderBy,
   Timestamp
@@ -20,16 +21,7 @@ import {
   getDownloadURL
 } from 'firebase/storage'
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: 'AIzaSyD5NrPJQ1JMS2aWX_K24TFQDer_cv61XuU',
-  authDomain: 'devter-80bbf.firebaseapp.com',
-  projectId: 'devter-80bbf',
-  storageBucket: 'devter-80bbf.appspot.com',
-  messagingSenderId: '631546898472',
-  appId: '1:631546898472:web:b4f8269f607d1f89eded1d',
-  measurementId: 'G-DKF3F7C5V9'
-}
+const firebaseConfig = JSON.parse(process.env.NEXT_PUBLIC_FIREBASE_CONFIG)
 
 initializeApp(firebaseConfig)
 const auth = getAuth()
@@ -91,24 +83,35 @@ export const addDevit = ({ content, userId, userName, avatar, imageUrl }) => {
   })
 }
 
-export const fetchLastestDevits = () => {
+const mapDevit = (doc) => {
+  const data = doc.data()
+  const id = doc.id
+  const { createdAt } = data
+
+  return {
+    ...data,
+    id,
+    createdAt: createdAt.toDate()
+  }
+}
+
+export const listenLastestDevits = (callback) => {
   const devitsRef = collection(db, 'devits')
-  const q = query(devitsRef, orderBy('createdAt', 'desc'))
+  const q = query(devitsRef, orderBy('createdAt', 'desc'), limit(20))
 
-  return getDocs(q).then((snapshot) => {
-    return snapshot.docs.map((doc) => {
-      const data = doc.data()
-      const id = doc.id
-      const { createdAt } = data
-
-      return {
-        ...data,
-        id,
-        createdAt: createdAt.toDate()
-      }
-    })
+  onSnapshot(q, (snapshot) => {
+    callback(snapshot.docs.map(mapDevit))
   })
 }
+
+// export const fetchLastestDevits = () => {
+//   const devitsRef = collection(db, 'devits')
+//   const q = query(devitsRef, orderBy('createdAt', 'desc'))
+
+//   return getDocs(q).then((snapshot) => {
+//     return snapshot.docs.map(mapDevit)
+//   })
+// }
 
 export const uploadImage = (file) => {
   const sref = ref(storage, `images/${file.name}`)

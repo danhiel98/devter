@@ -32,3 +32,9 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# linter
+.eslintcache
+
+# firebase admin keys
+firebase-admin-keys.json
